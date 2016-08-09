@@ -25,7 +25,7 @@ you're done with it to ensure that all messages are delivered, so we
 recommend opening it in a `with-open` form.
 
 ```clojure
-(with-open [stitch (sc/client {::sc/client-id (Integer/parseInt client-id)
+(with-open [stitch (sc/client {::sc/client-id client-id
                                ::sc/token token
                                ::sc/namespace -namespace})]
   ...)
@@ -73,7 +73,7 @@ Note that Clojure keywords are _not_ allowed in the data map.
 Running the Example Program
 ---------------------------
 
-Please see (example.clj)[src/com/stitchdata/client/example.clj] for a
+Please see [example.clj](src/com/stitchdata/client/example.clj) for a
 full working example. You can run it by executing this command
 (replacing CLIENT_ID, TOKEN, and NAMESPACE with your own values):
 
@@ -96,7 +96,7 @@ more convenient, you can set some of those fields on the client. The
 resulting client will inject the values for those fields into every
 message it sends.
 
-```java
+```clojure
 (with-open [stitch (sc/client {::sc/client-id (Integer/parseInt client-id)
                                ::sc/token token
                                ::sc/namespace -namespace
@@ -121,7 +121,7 @@ then deliver the batch when one of the following conditions is met:
 If you want to send data more frequently, you can lower the buffer
 capacity or the time limit.
 
-```java
+```clojure
 (with-open [stitch (sc/client {::sc/client-id (Integer/parseInt client-id)
                                ::sc/token token
                                ::sc/namespace -namespace
