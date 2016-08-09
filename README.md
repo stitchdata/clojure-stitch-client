@@ -97,7 +97,7 @@ resulting client will inject the values for those fields into every
 message it sends.
 
 ```clojure
-(with-open [stitch (sc/client {::sc/client-id (Integer/parseInt client-id)
+(with-open [stitch (sc/client {::sc/client-id client-id
                                ::sc/token token
                                ::sc/namespace -namespace
                                ::sc/table-name "my-table"
@@ -122,7 +122,7 @@ If you want to send data more frequently, you can lower the buffer
 capacity or the time limit.
 
 ```clojure
-(with-open [stitch (sc/client {::sc/client-id (Integer/parseInt client-id)
+(with-open [stitch (sc/client {::sc/client-id client-id
                                ::sc/token token
                                ::sc/namespace -namespace
 
