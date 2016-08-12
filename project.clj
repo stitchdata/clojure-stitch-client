@@ -1,4 +1,4 @@
-(defproject clojure-stitch-client "0.1.1-SNAPSHOT"
+(defproject clojure-stitch-client "0.1.1"
   :description "Clojure Stitch Client"
   :url "http://example.com/FIXME"
   :license {:name "Apache License, Version 2.0"
