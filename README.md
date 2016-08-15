@@ -4,6 +4,14 @@ Clojure Stitch Client
 Quick Start
 -----------
 
+### Dependency
+
+Leiningen:
+
+```clojure
+[com.stitchdata/clojure-stitch-client "0.1.6"]
+```
+
 ### Require the Library
 
 There's only one namespace to require,
