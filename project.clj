@@ -1,6 +1,6 @@
-(defproject clojure-stitch-client "0.1.5"
+(defproject com.stitchdata/clojure-stitch-client "0.1.6-SNAPSHOT"
   :description "Clojure Stitch Client"
-  :url "http://example.com/FIXME"
+  :url "https://github.com/stitchdata/clojure-stitch-client"
   :license {:name "Apache License, Version 2.0"
             :url "http://www.apache.org/licenses/LICENSE-2.0"}
   :dependencies [[org.clojure/clojure "1.7.0"]
