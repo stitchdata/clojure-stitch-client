@@ -21,7 +21,8 @@
                        ::sc/data data})))
 "
   (:import [com.stitchdata.client StitchClientBuilder
-            StitchClient StitchMessage StitchMessage$Action]
+            StitchClient StitchMessage StitchMessage$Action
+            FlushHandler]
            [java.util List]))
 
 (set! *warn-on-reflection* true)
@@ -48,6 +49,11 @@
     (throw (IllegalArgumentException. "namespace must be a string")))
   x)
 
+(defn- push-url [x]
+  (when-not (string? x)
+    (throw (IllegalArgumentException. "push url must be a string")))
+  x)
+
 (defn- token [x]
   (when-not (string? x)
     (throw (IllegalArgumentException. "token must be a string")))
@@ -66,7 +72,7 @@
 (defn- key-names [x]
   (when-not (coll? x)
     (throw (IllegalArgumentException. "key-names must be a collection")))
-  x)
+  (vec x))
 
 (defn- batch-size-bytes [x]
   (when-not (integer? x)
@@ -142,17 +148,23 @@
   `push` will result in lost or corrupt data.
 "
   [client-spec]
+
   (let [builder (StitchClientBuilder.)]
     (doseq [[k v] client-spec]
       (case k
-        ::client-id (.withClientId builder (client-id v))
-        ::namespace (.withNamespace builder (-namespace v))
-        ::token (.withToken builder (token v))
-        ::table-name (.withTableName builder (table-name v))
-        ::key-names (.withKeyNames builder ^List (key-names v))
-        ::batch-size-bytes (.withBatchSizeBytes builder (batch-size-bytes v))
+        ::client-id          (.withClientId builder (client-id v))
+        ::namespace          (.withNamespace builder (-namespace v))
+        ::token              (.withToken builder (token v))
+        ::table-name         (.withTableName builder (table-name v))
+        ::key-names          (.withKeyNames builder ^List (vec (key-names v)))
+        ::batch-size-bytes   (.withBatchSizeBytes builder (batch-size-bytes v))
         ::batch-delay-millis (.withBatchDelayMillis builder (batch-delay-millis v))
-        :else (throw (IllegalArgumentException. (str "Illegal key" k)))))
+        ::flush-handler      (.withFlushHandler builder (reify FlushHandler
+                                                          (onFlush [this args]
+                                                            (v args))))
+        ::push-url           (.withPushUrl builder (push-url v))
+        ::write-handlers     (.withWriteHandlers builder v)
+        :else                (throw (IllegalArgumentException. (str "Illegal key" k)))))
     (.build builder)))
 
 
@@ -169,15 +181,17 @@
    ::sc/sequence 123456789
    ::sc/data {\"id\" 1, \"name\" \"John\"}}
  "
-  [^StitchClient client message]
-  (let [sm (StitchMessage.)]
-    (doseq [[k v] message]
-      (case k
-        ::action (.withAction sm (action v))
-        ::table-name (.withTableName sm (table-name v))
-        ::table-version (.withTableVersion sm (table-version v))
-        ::key-names (.withKeyNames sm ^List (key-names v))
-        ::sequence (.withSequence sm (-sequence v))
-        ::data (.withData sm v)
-        :else (throw (IllegalArgumentException. (str "Illegal key" k)))))
-    (.push client sm)))
+  ([^StitchClient client message]
+   (push client message nil))
+  ([^StitchClient client message callback-arg]
+   (let [sm (StitchMessage.)]
+     (doseq [[k v] message]
+       (case k
+         ::action        (.withAction sm (action v))
+         ::table-name    (.withTableName sm (table-name v))
+         ::table-version (.withTableVersion sm (table-version v))
+         ::key-names     (.withKeyNames sm ^List (key-names v))
+         ::sequence      (.withSequence sm (-sequence v))
+         ::data          (.withData sm v)
+         :else           (throw (IllegalArgumentException. (str "Illegal key" k)))))
+     (.push client sm callback-arg))))
