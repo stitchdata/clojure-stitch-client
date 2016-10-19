@@ -1,4 +1,4 @@
-(defproject com.stitchdata/clojure-stitch-client "0.1.7"
+(defproject com.stitchdata/clojure-stitch-client "0.3.1-SNAPSHOT"
   :description "Clojure Stitch Client"
   :url "https://github.com/stitchdata/clojure-stitch-client"
   :license {:name "Apache License, Version 2.0"
