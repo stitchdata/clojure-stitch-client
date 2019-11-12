@@ -9,7 +9,7 @@ Quick Start
 Leiningen:
 
 ```clojure
-[com.stitchdata/clojure-stitch-client "0.1.6"]
+[com.stitchdata/clojure-stitch-client "0.5.9"]
 ```
 
 ### Require the Library
